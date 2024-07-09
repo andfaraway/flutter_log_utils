@@ -6,5 +6,7 @@ Easy and elegantly print logs.
 
 ```
 Log.d('message');
+
+Log.line();
 ```
 

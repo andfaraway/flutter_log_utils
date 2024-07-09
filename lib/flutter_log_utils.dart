@@ -20,56 +20,80 @@ class Log {
 
   static bool expandLog = false;
 
-  static void line(String lineSpace, {
-    int length = 160,
+  static int lineSeparatorLength = 160;
+
+  static void line({
+    String separator = '=',
+    int? length,
     String tag = '',
     int spaceLine = 0,
   }) {
-    String text = lineSpace * length + '\n' * spaceLine;
+    String text = separator * (length ?? lineSeparatorLength) + '\n' * spaceLine;
     dev.log(text, name: tag);
   }
 
-  static void i(dynamic message, {
+  static void i(
+    dynamic message, {
     String? tag,
     StackTrace? stackTrace,
+    bool? expand,
   }) {
-    _printLog(message, '${tag ?? defaultTag} ❕', stackTrace);
+    _printLog(
+      message,
+      '${tag ?? defaultTag} ❕',
+      stackTrace,
+      expand: expand,
+    );
   }
 
-  static void d(dynamic message, {
+  static void d(
+    dynamic message, {
     String? tag,
     StackTrace? stackTrace,
+    bool? expand,
   }) {
-    _printLog(message, '${tag ?? defaultTag} 🐛', stackTrace);
+    _printLog(
+      message,
+      '${tag ?? defaultTag} 🐛',
+      stackTrace,
+      expand: expand,
+    );
   }
 
-  static void n(dynamic message, {
+  static void n(
+    dynamic message, {
     String? tag,
-    StackTrace? stackTrace, int? level,
-
+    StackTrace? stackTrace,
+    int? level,
+    bool? expand,
   }) {
     if (apiLogOpen) {
-      if (message == null) return;
-      try {
-        if (message.isEmpty) {
-          return;
-        }
-      } catch (_) {
-        return;
-      }
-      _printLog(message, '🌐 ${tag ?? 'network'}', stackTrace, level: level);
+      _printLog(
+        message,
+        '🌐 ${tag ?? 'network'}',
+        stackTrace,
+        level: level,
+        expand: expand,
+      );
     }
   }
 
-  static void w(dynamic message, {String? tag, StackTrace? stackTrace}) {
+  static void w(
+    dynamic message, {
+    String? tag,
+    StackTrace? stackTrace,
+    bool? expand,
+  }) {
     _printLog(
       message,
       '${tag ?? defaultTag} ⚠️',
       stackTrace,
+      expand: expand,
     );
   }
 
-  static void e(dynamic message, {
+  static void e(
+    dynamic message, {
     String? tag,
     StackTrace? stackTrace,
     bool withStackTrace = true,
@@ -86,16 +110,17 @@ class Log {
     );
   }
 
-  static void _printLog(dynamic message,
-      String? tag,
-      StackTrace? stackTrace,
-      {
-        bool isError = false,
-        int? level,
-        bool withStackTrace = true,
-      }) {
+  static void _printLog(
+    dynamic message,
+    String? tag,
+    StackTrace? stackTrace, {
+    bool isError = false,
+    int? level,
+    bool withStackTrace = true,
+    bool? expand,
+  }) {
     dev.log(
-      '${_timeDateFormat(DateTime.now())} ${expandLog ? '\n' : ''}${_messageFormat(message)}',
+      '${_timeDateFormat(DateTime.now())} ${expand ?? expandLog ? '\n' : ''}${_messageFormat(message)}',
       time: DateTime.now(),
       name: tag ?? defaultTag,
       level: level ?? 800,
@@ -120,7 +145,6 @@ class Log {
       return number.toString().padLeft(2, '0');
     }
 
-    return '[${intToTwoString(dateTime.hour)}:${intToTwoString(dateTime.minute)}:${intToTwoString(
-        dateTime.second)}:${intToTwoString(dateTime.millisecond)}]';
+    return '[${intToTwoString(dateTime.hour)}:${intToTwoString(dateTime.minute)}:${intToTwoString(dateTime.second)}:${intToTwoString(dateTime.millisecond)}]';
   }
 }
