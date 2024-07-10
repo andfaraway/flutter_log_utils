@@ -33,11 +33,11 @@ class Log {
   }
 
   static void i(
-    dynamic message, {
-    String? tag,
-    StackTrace? stackTrace,
-    bool? expand,
-  }) {
+      dynamic message, {
+        String? tag,
+        StackTrace? stackTrace,
+        bool? expand,
+      }) {
     _printLog(
       message,
       '${tag ?? defaultTag} ❕',
@@ -47,11 +47,11 @@ class Log {
   }
 
   static void d(
-    dynamic message, {
-    String? tag,
-    StackTrace? stackTrace,
-    bool? expand,
-  }) {
+      dynamic message, {
+        String? tag,
+        StackTrace? stackTrace,
+        bool? expand,
+      }) {
     _printLog(
       message,
       '${tag ?? defaultTag} 🐛',
@@ -61,12 +61,12 @@ class Log {
   }
 
   static void n(
-    dynamic message, {
-    String? tag,
-    StackTrace? stackTrace,
-    int? level,
-    bool? expand,
-  }) {
+      dynamic message, {
+        String? tag,
+        StackTrace? stackTrace,
+        int? level,
+        bool? expand,
+      }) {
     if (apiLogOpen) {
       _printLog(
         message,
@@ -79,11 +79,11 @@ class Log {
   }
 
   static void w(
-    dynamic message, {
-    String? tag,
-    StackTrace? stackTrace,
-    bool? expand,
-  }) {
+      dynamic message, {
+        String? tag,
+        StackTrace? stackTrace,
+        bool? expand,
+      }) {
     _printLog(
       message,
       '${tag ?? defaultTag} ⚠️',
@@ -93,13 +93,13 @@ class Log {
   }
 
   static void e(
-    dynamic message, {
-    String? tag,
-    StackTrace? stackTrace,
-    bool withStackTrace = true,
-    bool isError = true,
-    int? level,
-  }) {
+      dynamic message, {
+        String? tag,
+        StackTrace? stackTrace,
+        bool withStackTrace = true,
+        bool isError = true,
+        int? level,
+      }) {
     _printLog(
       message,
       '${tag ?? defaultTag} ❌',
@@ -111,16 +111,16 @@ class Log {
   }
 
   static void _printLog(
-    dynamic message,
-    String? tag,
-    StackTrace? stackTrace, {
-    bool isError = false,
-    int? level,
-    bool withStackTrace = true,
-    bool? expand,
-  }) {
+      dynamic message,
+      String? tag,
+      StackTrace? stackTrace, {
+        bool isError = false,
+        int? level,
+        bool withStackTrace = true,
+        bool? expand,
+      }) {
     dev.log(
-      '${_timeDateFormat(DateTime.now())} ${expand ?? expandLog ? '\n' : ''}${_messageFormat(message)}',
+      '${_timeDateFormat(DateTime.now())} ${_messageFormat(message,expand ?? expandLog)}',
       time: DateTime.now(),
       name: tag ?? defaultTag,
       level: level ?? 800,
@@ -128,16 +128,18 @@ class Log {
     );
   }
 
-  static dynamic _messageFormat(dynamic message) {
+  static dynamic _messageFormat(dynamic message,bool expand) {
+    String result = expand ? '\n' : '';
     try {
-      if (expandLog) {
-        return const JsonEncoder.withIndent(' ').convert(message);
+      if (expand) {
+        result += const JsonEncoder.withIndent(' ').convert(message);
       } else {
-        return jsonEncode(message);
+        result += jsonEncode(message);
       }
     } catch (e) {
-      return message;
+      result = message;
     }
+    return result;
   }
 
   static String _timeDateFormat(DateTime dateTime) {

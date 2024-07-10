@@ -6,4 +6,8 @@
 
 * It is more elegant to use.
 
+## 0.0.3
+
+* Bug fix.
+
 
