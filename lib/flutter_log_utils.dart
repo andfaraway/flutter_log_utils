@@ -137,7 +137,7 @@ class Log {
         result += jsonEncode(message);
       }
     } catch (e) {
-      result = message;
+      return message;
     }
     return result;
   }
